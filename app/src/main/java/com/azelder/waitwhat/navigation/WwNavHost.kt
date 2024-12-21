@@ -6,7 +6,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import com.azelder.waitwhat.ui.compose.GameScreen
+import com.azelder.waitwhat.game.dnd.ui.GameRoute
 import com.azelder.waitwhat.ui.compose.HomeScreen
 import kotlinx.serialization.Serializable
 
@@ -32,7 +32,7 @@ fun WwNavHost(
             )
         }
         composable<Game> {
-            GameScreen(
+            GameRoute(
                 onNavigateBack = { navHostController.popBackStack() }
             )
         }
