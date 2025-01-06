@@ -1,8 +1,7 @@
 package com.azelder.waitwhat.game.dnd.data
 
 import com.azelder.waitwhat.R
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import com.azelder.waitwhat.game.dnd.model.DndQuestion
 import javax.inject.Inject
 
 private val dndAssetMap = mapOf(
@@ -15,21 +14,40 @@ private val dndAssetMap = mapOf(
     "displacer_beast" to R.drawable.dnd_quiz_displacerbeast,
 )
 
-data class DndQuestion(val asset: Int, val name: String, val nameList: List<String>)
-
 class DndDataSource @Inject constructor() {
-    // To start, we'll return a single asset, along with 3 other random names.
-    fun getQuestion(): DndQuestion {
-        val nameList = dndAssetMap.keys.shuffled().take(4)
-        val assetName = nameList.random()
-        val asset = dndAssetMap.getValue(assetName)
-        return DndQuestion(asset, assetName, nameList + assetName)
+
+    private val questionSet: MutableSet<String> = mutableSetOf()
+
+    /**
+     * @throws NoSuchElementException if there are no more questions in the unasked question set
+     */
+    @Throws(NoSuchElementException::class)
+    fun getNextQuestion(): DndQuestion {
+        // get a random monster from the question set that hasn't been asked yet
+        val newMonsterToGuess = questionSet.random()
+        // get random names from the entire monster name set, combine with the new monster
+        val guessList = dndAssetMap.keys.filter {
+            it != newMonsterToGuess
+        }.shuffled().take(3) + newMonsterToGuess
+        return DndQuestion(
+            dndAssetMap.getValue(newMonsterToGuess),
+            newMonsterToGuess,
+            guessList + newMonsterToGuess)
     }
 
-    fun getQuestionFlow(): Flow<DndQuestion> = flow {
-        emit(getQuestion())
+    fun startGame() {
+        questionSet.clear()
+        questionSet.addAll(dndAssetMap.keys)
     }
 
-    fun getAssetNames() = dndAssetMap.keys.toList()
+    fun endGame() {
+        questionSet.clear()
+        // TODO track results
 
+    }
+
+    fun setQuestionAnswered(question: DndQuestion) : Int {
+        questionSet.remove(question.name)
+        return questionSet.size
+    }
 }
