@@ -6,17 +6,20 @@ interface DndRepository {
     /**
      * Boolean is to indicate success. This should probably be updated to a sealed game state.
      */
-    fun startGame(): DndGameState
+    fun startGame()
 
-    fun endGame(): DndGameState
+    fun endGame()
 
     fun getNextQuestion(): DndQuestion
 
-    fun setQuestionAnswered(question: DndQuestion) : DndGameState
+    /**
+     * Set the provided question as answered and return the new game state with new question if needed.
+     */
+    fun setQuestionAnswered(monsterName: String) : DndGameState
 }
 
 sealed interface DndGameState {
     data object NotStarted : DndGameState
-    data object InProgress : DndGameState
+    data class InProgress(val question: DndQuestion) : DndGameState
     data object Ended : DndGameState
 }

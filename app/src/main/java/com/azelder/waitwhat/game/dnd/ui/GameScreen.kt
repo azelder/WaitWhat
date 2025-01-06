@@ -24,30 +24,42 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.azelder.waitwhat.R
 import com.azelder.waitwhat.game.dnd.DndViewModel
 import com.azelder.waitwhat.game.dnd.SnackbarState
+import com.azelder.waitwhat.game.dnd.data.DndGameState
 import com.azelder.waitwhat.game.dnd.model.DndQuestion
 import com.azelder.waitwhat.ui.theme.WaitWhatTheme
 
 @Composable
 fun GameRoute(
     onNavigateBack: () -> Unit,
+    onNavigateToEndScreen: () -> Unit,
     viewModel: DndViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val answerMessageState by viewModel.answerResponseState.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
 
-    GameScreen(
-        uiState = uiState,
-        answerMessageState = answerMessageState,
-        snackbarHostState = snackbarHostState,
-        onNavigateBack = onNavigateBack,
-        onCheckAnswer = { viewModel.checkAnswer(it) }
-    )
+    when (uiState) {
+        is DndGameState.Ended -> {
+            onNavigateToEndScreen()
+        }
+        is DndGameState.InProgress -> {
+            GameScreen(
+                uiState = uiState as DndGameState.InProgress,
+                answerMessageState = answerMessageState,
+                snackbarHostState = snackbarHostState,
+                onNavigateBack = onNavigateBack,
+                onCheckAnswer = { viewModel.checkAnswer(it) }
+            )
+        }
+        is DndGameState.NotStarted -> {
+            // this might not be necessary?
+        }
+    }
 }
 
 @Composable
 fun GameScreen(
-    uiState: DndQuestion,
+    uiState: DndGameState.InProgress,
     answerMessageState: SnackbarState,
     snackbarHostState: SnackbarHostState,
     onNavigateBack: () -> Unit,
@@ -67,8 +79,9 @@ fun GameScreen(
             Column(
                 modifier = Modifier.padding(innerPadding)
             ) {
+                val question = uiState.question
                 Image(
-                    painter = painterResource(id = uiState.asset),
+                    painter = painterResource(id = uiState.question.asset),
                     contentDescription = "Image of DnD Monster",
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -76,31 +89,31 @@ fun GameScreen(
                 // TODO, perhaps this could be a grid actually?
                 Button(
                     modifier = Modifier.fillMaxWidth(),
-                    onClick = { onCheckAnswer(uiState.nameList[0]) },
+                    onClick = { onCheckAnswer(uiState.question.nameList[0]) },
 
                 ) {
-                    Text(text = uiState.nameList[0])
+                    Text(text = uiState.question.nameList[0])
                 }
                 Button(
                     modifier = Modifier.fillMaxWidth(),
-                    onClick = { onCheckAnswer(uiState.nameList[1]) },
+                    onClick = { onCheckAnswer(uiState.question.nameList[1]) },
 
                     ) {
-                    Text(text = uiState.nameList[1])
+                    Text(text = uiState.question.nameList[1])
                 }
                 Button(
                     modifier = Modifier.fillMaxWidth(),
-                    onClick = { onCheckAnswer(uiState.nameList[2]) },
+                    onClick = { onCheckAnswer(uiState.question.nameList[2]) },
 
                     ) {
-                    Text(text = uiState.nameList[2])
+                    Text(text = uiState.question.nameList[2])
                 }
                 Button(
                     modifier = Modifier.fillMaxWidth(),
-                    onClick = { onCheckAnswer(uiState.nameList[3]) },
+                    onClick = { onCheckAnswer(uiState.question.nameList[3]) },
 
                     ) {
-                    Text(text = uiState.nameList[3])
+                    Text(text = uiState.question.nameList[3])
                 }
                 Spacer(
                     modifier = Modifier.height(16.dp)
@@ -120,7 +133,11 @@ fun GameScreen(
 @Composable
 fun PreviewGameScreen() {
     GameScreen(
-        uiState = DndQuestion(R.drawable.dnd_quiz_balor, "Balor", listOf("Balor", "Basilisk", "Beholder", "Cockatrice")),
+        uiState = DndGameState.InProgress(
+            question = DndQuestion(
+                R.drawable.dnd_quiz_balor, "Balor", listOf("Balor", "Basilisk", "Beholder", "Cockatrice")
+            )
+        ),
         snackbarHostState = SnackbarHostState(),
         answerMessageState = SnackbarState.DoNothing,
         onNavigateBack = {},

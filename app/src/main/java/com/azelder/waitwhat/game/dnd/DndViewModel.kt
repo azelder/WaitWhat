@@ -3,7 +3,6 @@ package com.azelder.waitwhat.game.dnd
 import androidx.lifecycle.ViewModel
 import com.azelder.waitwhat.game.dnd.data.DndGameState
 import com.azelder.waitwhat.game.dnd.data.DndRepository
-import com.azelder.waitwhat.game.dnd.model.DndQuestion
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -22,35 +21,27 @@ class DndViewModel @Inject constructor(
         dndRepository.startGame()
     }
 
-    private val _state = MutableStateFlow(
-        dndRepository.getNextQuestion()
+    private val _state: MutableStateFlow<DndGameState> = MutableStateFlow(
+        DndGameState.InProgress(dndRepository.getNextQuestion())
     )
-    val uiState: StateFlow<DndQuestion> = _state
+    val uiState: StateFlow<DndGameState> = _state.asStateFlow()
 
     private val _answerResponseState = MutableStateFlow<SnackbarState>(SnackbarState.DoNothing)
     val answerResponseState: StateFlow<SnackbarState> = _answerResponseState.asStateFlow()
 
     fun checkAnswer(choice: String) {
-        if (choice.equals(uiState.value.name)) {
-            // go to next question
+        // TODO might want to store the current question in a variable rather than a state that might not have a question...
+        if (uiState.value is DndGameState.InProgress && choice.equals((uiState.value as DndGameState.InProgress).question.name)) {
             _answerResponseState.value = SnackbarState.Announce("That IS a ${choice}! Well done")
-            val gameState = dndRepository.setQuestionAnswered(uiState.value)
-            when (gameState) {
-                is DndGameState.Ended -> {
-                    // TODO do something to show game end.
-                    // probably launch a new screen...
-
-                }
-                else -> _state.value = dndRepository.getNextQuestion()
-            }
+            // go to next question
+            _state.value = dndRepository.setQuestionAnswered(choice)
         } else {
-            // emit snackbar
             _answerResponseState.value = SnackbarState.Announce("${choice} is incorrect! Try again!")
         }
     }
 }
 
 sealed interface SnackbarState {
-    object DoNothing : SnackbarState
+    data object DoNothing : SnackbarState
     data class Announce(val message: String) : SnackbarState
 }

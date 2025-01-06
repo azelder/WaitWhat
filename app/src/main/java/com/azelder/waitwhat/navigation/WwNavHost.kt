@@ -6,6 +6,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navOptions
+import com.azelder.waitwhat.game.dnd.ui.EndGameRoute
 import com.azelder.waitwhat.game.dnd.ui.GameRoute
 import com.azelder.waitwhat.game.dnd.ui.HomeScreen
 import kotlinx.serialization.Serializable
@@ -15,6 +17,9 @@ object Home
 
 @Serializable
 object Game
+
+@Serializable
+object EndGame
 
 @Composable
 fun WwNavHost(
@@ -33,7 +38,20 @@ fun WwNavHost(
         }
         composable<Game> {
             GameRoute(
-                onNavigateBack = { navHostController.popBackStack() }
+                onNavigateBack = { navHostController.popBackStack() },
+                onNavigateToEndScreen = {
+                    navHostController.navigate(EndGame,
+                        navOptions = navOptions {
+                            popUpTo(Home) { inclusive = false }
+                        })
+                }
+            )
+        }
+        composable<EndGame> {
+            EndGameRoute(
+                onNavigateToHome = {
+                    navHostController.navigate(route = Home)
+                }
             )
         }
     }

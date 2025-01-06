@@ -5,13 +5,13 @@ import com.azelder.waitwhat.game.dnd.model.DndQuestion
 import javax.inject.Inject
 
 private val dndAssetMap = mapOf(
-    "balor" to R.drawable.dnd_quiz_balor,
-    "basilisk" to R.drawable.dnd_quiz_basilisk,
-    "beholder" to R.drawable.dnd_quiz_beholder,
-    "bulette" to R.drawable.dnd_quiz_bulette,
-    "chimera" to R.drawable.dnd_quiz_chimera,
-    "cocatrice" to R.drawable.dnd_quiz_cockatrice,
-    "displacer_beast" to R.drawable.dnd_quiz_displacerbeast,
+    "Balor" to R.drawable.dnd_quiz_balor,
+    "Basilisk" to R.drawable.dnd_quiz_basilisk,
+    "Beholder" to R.drawable.dnd_quiz_beholder,
+    "Bulette" to R.drawable.dnd_quiz_bulette,
+    "Chimera" to R.drawable.dnd_quiz_chimera,
+    "Cocatrice" to R.drawable.dnd_quiz_cockatrice,
+    "Displacer Beast" to R.drawable.dnd_quiz_displacerbeast,
 )
 
 class DndDataSource @Inject constructor() {
@@ -32,7 +32,8 @@ class DndDataSource @Inject constructor() {
         return DndQuestion(
             dndAssetMap.getValue(newMonsterToGuess),
             newMonsterToGuess,
-            guessList + newMonsterToGuess)
+            guessList.shuffled()
+        )
     }
 
     fun startGame() {
@@ -43,11 +44,10 @@ class DndDataSource @Inject constructor() {
     fun endGame() {
         questionSet.clear()
         // TODO track results
-
     }
 
-    fun setQuestionAnswered(question: DndQuestion) : Int {
-        questionSet.remove(question.name)
+    fun setQuestionAnswered(monsterName: String) : Int {
+        questionSet.remove(monsterName)
         return questionSet.size
     }
 }
