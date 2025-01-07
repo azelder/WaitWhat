@@ -3,9 +3,11 @@ package com.azelder.waitwhat.game.dnd.ui
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -16,6 +18,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -74,12 +77,28 @@ fun GameScreen(
         Scaffold(
             snackbarHost = {
                 SnackbarHost(hostState = snackbarHostState)
+            },
+            bottomBar = {
+                BottomAppBar {
+                    Button(
+                        modifier = Modifier.fillMaxWidth(),
+                        onClick = { onNavigateBack() },
+                    ) {
+                        Text(text = "End game")
+                    }
+                }
             }
         ) { innerPadding ->
+            Image(
+                painter = painterResource(id = R.drawable.dnd_parchment),
+                contentDescription = null,
+                modifier = Modifier
+                    .fillMaxSize(),
+                contentScale = ContentScale.FillBounds
+            )
             Column(
                 modifier = Modifier.padding(innerPadding)
             ) {
-                val question = uiState.question
                 Image(
                     painter = painterResource(id = uiState.question.asset),
                     contentDescription = "Image of DnD Monster",
@@ -118,12 +137,7 @@ fun GameScreen(
                 Spacer(
                     modifier = Modifier.height(16.dp)
                 )
-                Button(
-                    modifier = Modifier.fillMaxWidth(),
-                    onClick = { onNavigateBack() },
-                ) {
-                    Text(text = "End game")
-                }
+
             }
         }
     }
@@ -143,4 +157,22 @@ fun PreviewGameScreen() {
         onNavigateBack = {},
         onCheckAnswer = {}
     )
+}
+
+@Preview
+@Composable
+fun PreviewGameScreenWithJpeg() {
+    GameScreen(
+        uiState = DndGameState.InProgress(
+            question = DndQuestion(
+                R.drawable.dnd_quiz_badger, "Balor", listOf("Balor", "Basilisk", "Beholder", "Cockatrice")
+            )
+        ),
+        snackbarHostState = SnackbarHostState(),
+        answerMessageState = SnackbarState.DoNothing,
+        onNavigateBack = {},
+        onCheckAnswer = {}
+    )
+
+
 }
