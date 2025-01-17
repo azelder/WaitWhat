@@ -2,22 +2,24 @@ package com.azelder.waitwhat.game.dnd.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.azelder.waitwhat.R
@@ -26,7 +28,27 @@ import com.azelder.waitwhat.ui.theme.WaitWhatTheme
 @Composable
 fun HomeScreen(onNavigateToGameScreen: () -> Unit) {
     WaitWhatTheme {
-        Surface {
+        Scaffold (
+            bottomBar = {
+                BottomAppBar(
+                    containerColor = Color.Transparent,
+                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 24.dp)
+                ) {
+                    Button(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(64.dp)
+                            .background(Color.Transparent),
+                        onClick = { onNavigateToGameScreen() },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.primary
+                        ),
+                        shape = MaterialTheme.shapes.medium
+                    ) {
+                        Text(text = "Lets play!")
+                    }
+                }
+            }) { innerPadding ->
             Image(
                 painter = painterResource(id = R.drawable.dnd_yawning_portal_splash_image),
                 contentDescription = null,
@@ -34,27 +56,22 @@ fun HomeScreen(onNavigateToGameScreen: () -> Unit) {
                     .fillMaxSize(),
                 contentScale = ContentScale.FillBounds
             )
-            Column(
+            Card(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.Transparent)
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.Center,
+                    .padding(innerPadding)
+                    .fillMaxWidth(),
+                colors = CardDefaults.cardColors(
+                    containerColor = Color.Transparent
+                )
             ) {
-
-                 Button(
-                     modifier = Modifier
-                         .fillMaxWidth()
-                         .align(Alignment.CenterHorizontally)
-                         .background(Color.Transparent),
-                     elevation = ButtonDefaults.elevatedButtonElevation(),
-                     onClick = { onNavigateToGameScreen() },
-                     colors = ButtonDefaults.buttonColors(
-                         containerColor = MaterialTheme.colorScheme.tertiary
-                     )
-                 ) {
-                     Text(text = "Lets play DnD Monster Who Dis")
-                 }
+                Text(
+                    text = "Dungeons and Dragons Quiz!",
+                    modifier = Modifier
+                        .padding(16.dp),
+                    style = MaterialTheme.typography.headlineLarge,
+                    color = Color.White,
+                    textAlign = TextAlign.Center
+                )
             }
         }
     }
