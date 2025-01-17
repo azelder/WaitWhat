@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -22,10 +23,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -104,13 +107,16 @@ fun GameScreen(
                 contentScale = ContentScale.FillBounds
             )
             Column(
-                modifier = Modifier.padding(innerPadding)
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Image(
                     painter = painterResource(id = uiState.question.asset),
                     contentDescription = "Image of DnD Monster",
-                    modifier = Modifier.fillMaxWidth().padding(16.dp),
-                    contentScale = ContentScale.FillWidth
+                    modifier = Modifier.padding(16.dp).heightIn(max = 600.dp),
+                    contentScale = ContentScale.FillBounds,
                 )
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(2),
@@ -119,11 +125,15 @@ fun GameScreen(
                     items(uiState.question.nameList.size) {
                         val name = uiState.question.nameList[it]
                         Button(
-                            modifier = Modifier.padding(8.dp).height(124.dp),
+                            modifier = Modifier.padding(8.dp).height(80.dp),
                             onClick = { onCheckAnswer(name) },
                             shape = MaterialTheme.shapes.medium
                         ) {
-                            Text(text = name)
+                            Text(
+                                text = name,
+                                style = MaterialTheme.typography.bodyLarge,
+                                textAlign = TextAlign.Center,
+                                )
                         }
                     }
                 }
@@ -140,7 +150,7 @@ fun PreviewGameScreen() {
     GameScreen(
         uiState = DndGameState.InProgress(
             question = DndQuestion(
-                R.drawable.dnd_quiz_balor, "Balor", listOf("Balor", "Basilisk", "Beholder", "Cockatrice")
+                R.drawable.dnd_quiz_gibberingmouther, "Balor", listOf("Balor", "Basilisk", "Beholder", "Cockatrice")
             )
         ),
         continueButtonState = true,
