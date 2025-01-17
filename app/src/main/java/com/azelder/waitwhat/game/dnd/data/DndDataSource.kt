@@ -25,9 +25,10 @@ class DndDataSource @Inject constructor() {
         )
     }
 
-    fun startGame() {
+    fun startGame() : Int {
         questionSet.clear()
         questionSet.addAll(dndAssetMap.keys)
+        return questionSet.size
     }
 
     fun endGame() {

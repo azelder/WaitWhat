@@ -14,31 +14,49 @@ class DndViewModel @Inject constructor(
     private val dndRepository: DndRepository
 ) : ViewModel() {
 
-    init {
-        // might want to double check if this should be in a coroutine. or somewhere else?
-        // Additionally need to double check there won't be a race condition with startGame and
-        // getNextQuestion in _state.
-        dndRepository.startGame()
-    }
+    // might want to double check if this should be in a coroutine. or somewhere else?
+    // Additionally need to double check there won't be a race condition with startGame and
+    // getNextQuestion in _state.
+    private val totalQuestions = dndRepository.startGame()
+    private var numQuestionsRemaining = totalQuestions
 
     private val _state: MutableStateFlow<DndGameState> = MutableStateFlow(
         DndGameState.InProgress(dndRepository.getNextQuestion())
     )
-    val uiState: StateFlow<DndGameState> = _state.asStateFlow()
-
+    val gameState: StateFlow<DndGameState> = _state.asStateFlow()
     private val _answerResponseState = MutableStateFlow<SnackbarState>(SnackbarState.DoNothing)
     val answerResponseState: StateFlow<SnackbarState> = _answerResponseState.asStateFlow()
+    private val _continueButtonState = MutableStateFlow(false)
+    val isCurrentQuestionAnsweredState: StateFlow<Boolean> = _continueButtonState.asStateFlow()
+    private val _progressState = MutableStateFlow(calculateProgress())
+    val progressState = _progressState.asStateFlow()
 
     fun checkAnswer(choice: String) {
-        // TODO might want to store the current question in a variable rather than a state that might not have a question...
-        if (uiState.value is DndGameState.InProgress && choice.equals((uiState.value as DndGameState.InProgress).question.name)) {
-            _answerResponseState.value = SnackbarState.Announce("That IS a ${choice}! Well done")
-            // go to next question
-            _state.value = dndRepository.setQuestionAnswered(choice)
+        if (
+            gameState.value is DndGameState.InProgress &&
+            choice == (gameState.value as DndGameState.InProgress).question.name
+        ) {
+            _continueButtonState.value = true
+            numQuestionsRemaining = dndRepository.setQuestionAnswered(choice)
         } else {
-            _answerResponseState.value = SnackbarState.Announce("${choice} is incorrect! Try again!")
+            _answerResponseState.value =
+                SnackbarState.Announce("$choice is incorrect! Try again!")
         }
     }
+
+    fun getNextQuestion() {
+        if (numQuestionsRemaining == 0) {
+            dndRepository.endGame()
+            _state.value = DndGameState.Ended
+        }
+        else {
+            _state.value = DndGameState.InProgress(dndRepository.getNextQuestion())
+            _continueButtonState.value = false
+            _progressState.value = calculateProgress()
+        }
+    }
+
+    private fun calculateProgress(): Float = (totalQuestions.toFloat() - numQuestionsRemaining.toFloat())/totalQuestions.toFloat()
 }
 
 sealed interface SnackbarState {

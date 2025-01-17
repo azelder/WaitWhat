@@ -12,6 +12,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -42,21 +43,26 @@ fun GameRoute(
     onNavigateToEndScreen: () -> Unit,
     viewModel: DndViewModel = hiltViewModel()
 ) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val gameState by viewModel.gameState.collectAsStateWithLifecycle()
+    val continueButtonState by viewModel.isCurrentQuestionAnsweredState.collectAsStateWithLifecycle()
     val answerMessageState by viewModel.answerResponseState.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
+    val progressState by viewModel.progressState.collectAsStateWithLifecycle()
 
-    when (uiState) {
+    when (gameState) {
         is DndGameState.Ended -> {
             onNavigateToEndScreen()
         }
         is DndGameState.InProgress -> {
             GameScreen(
-                uiState = uiState as DndGameState.InProgress,
+                uiState = gameState as DndGameState.InProgress,
+                continueButtonState = continueButtonState,
+                progressState = progressState,
                 answerMessageState = answerMessageState,
                 snackbarHostState = snackbarHostState,
                 onNavigateBack = onNavigateBack,
-                onCheckAnswer = { viewModel.checkAnswer(it) }
+                onCheckAnswer = { viewModel.checkAnswer(it) },
+                onContinueToNextQuestion = { viewModel.getNextQuestion() }
             )
         }
         is DndGameState.NotStarted -> {
@@ -68,10 +74,13 @@ fun GameRoute(
 @Composable
 fun GameScreen(
     uiState: DndGameState.InProgress,
+    continueButtonState: Boolean,
+    progressState: Float,
     answerMessageState: SnackbarState,
     snackbarHostState: SnackbarHostState,
     onNavigateBack: () -> Unit,
-    onCheckAnswer: (String) -> Unit
+    onCheckAnswer: (String) -> Unit,
+    onContinueToNextQuestion: () -> Unit
 ) {
     WaitWhatTheme {
         LaunchedEffect(answerMessageState) {
@@ -84,20 +93,7 @@ fun GameScreen(
                 SnackbarHost(hostState = snackbarHostState)
             },
             bottomBar = {
-                BottomAppBar(
-                    containerColor = Color.Transparent,
-                ) {
-                    Button(
-                        modifier = Modifier.fillMaxWidth().height(64.dp),
-                        onClick = { onNavigateBack() },
-                        shape = MaterialTheme.shapes.medium,
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.primary,
-                        )
-                    ) {
-                        Text(text = "Continue")
-                    }
-                }
+                BottomButtonWithProgress(continueButtonState, progressState, onContinueToNextQuestion)
             }
         ) { innerPadding ->
             Image(
@@ -116,8 +112,6 @@ fun GameScreen(
                     modifier = Modifier.fillMaxWidth().padding(16.dp),
                     contentScale = ContentScale.FillWidth
                 )
-                // TODO this should be a parameterized list, and not merely duplicated.
-                // TODO, perhaps this could be a grid actually?
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(2),
                     contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp)
@@ -149,10 +143,13 @@ fun PreviewGameScreen() {
                 R.drawable.dnd_quiz_balor, "Balor", listOf("Balor", "Basilisk", "Beholder", "Cockatrice")
             )
         ),
+        continueButtonState = true,
+        progressState = 0.5f,
         snackbarHostState = SnackbarHostState(),
         answerMessageState = SnackbarState.DoNothing,
         onNavigateBack = {},
-        onCheckAnswer = {}
+        onCheckAnswer = {},
+        onContinueToNextQuestion = {}
     )
 }
 
@@ -165,9 +162,37 @@ fun PreviewGameScreenWithJpeg() {
                 R.drawable.dnd_quiz_badger, "Balor", listOf("Balor", "Basilisk", "Beholder", "Cockatrice")
             )
         ),
+        continueButtonState = false,
+        progressState = 0.5f,
         snackbarHostState = SnackbarHostState(),
         answerMessageState = SnackbarState.DoNothing,
         onNavigateBack = {},
-        onCheckAnswer = {}
+        onCheckAnswer = {},
+        onContinueToNextQuestion = {}
     )
+}
+
+@Composable
+fun BottomButtonWithProgress(continueButtonState: Boolean, progressState: Float, onContinueToNextQuestion: () -> Unit) {
+    Column {
+        LinearProgressIndicator(
+            progress = { progressState },
+            modifier = Modifier.fillMaxWidth().height(8.dp),
+        )
+        BottomAppBar(
+            containerColor = Color.Transparent,
+        ) {
+            Button(
+                modifier = Modifier.fillMaxWidth().height(64.dp),
+                enabled = continueButtonState,
+                onClick = { onContinueToNextQuestion() },
+                shape = MaterialTheme.shapes.medium,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                )
+            ) {
+                Text(text = "Continue")
+            }
+        }
+    }
 }

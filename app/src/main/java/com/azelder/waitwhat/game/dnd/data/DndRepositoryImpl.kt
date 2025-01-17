@@ -6,8 +6,8 @@ import javax.inject.Inject
 class DndRepositoryImpl @Inject constructor(
     private val dataSource: DndDataSource
 ) : DndRepository {
-    override fun startGame() {
-        dataSource.startGame()
+    override fun startGame(): Int {
+        return dataSource.startGame()
     }
 
     override fun endGame() {
@@ -18,12 +18,7 @@ class DndRepositoryImpl @Inject constructor(
         return dataSource.getNextQuestion()
     }
 
-    override fun setQuestionAnswered(monsterName: String) : DndGameState {
-        val remaining = dataSource.setQuestionAnswered(monsterName)
-        return when {
-            remaining <= 0 -> DndGameState.Ended
-            else -> DndGameState.InProgress(dataSource.getNextQuestion())
-        }
+    override fun setQuestionAnswered(monsterName: String): Int {
+        return dataSource.setQuestionAnswered(monsterName)
     }
-
 }
