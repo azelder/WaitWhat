@@ -40,7 +40,7 @@ class DndViewModel @Inject constructor(
             numQuestionsRemaining = dndRepository.setQuestionAnswered(choice)
         } else {
             _answerResponseState.value =
-                SnackbarState.Announce("$choice is incorrect! Try again!")
+                SnackbarState.Announce("$choice is incorrect. Try again!")
         }
     }
 

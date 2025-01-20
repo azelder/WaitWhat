@@ -56,6 +56,7 @@ fun GameRoute(
         is DndGameState.Ended -> {
             onNavigateToEndScreen()
         }
+
         is DndGameState.InProgress -> {
             GameScreen(
                 uiState = gameState as DndGameState.InProgress,
@@ -68,6 +69,7 @@ fun GameRoute(
                 onContinueToNextQuestion = { viewModel.getNextQuestion() }
             )
         }
+
         is DndGameState.NotStarted -> {
             // this might not be necessary?
         }
@@ -87,16 +89,20 @@ fun GameScreen(
 ) {
     WaitWhatTheme {
         LaunchedEffect(answerMessageState) {
-           if (answerMessageState is SnackbarState.Announce) {
-               snackbarHostState.showSnackbar(answerMessageState.message)
-           }
+            if (answerMessageState is SnackbarState.Announce) {
+                snackbarHostState.showSnackbar(answerMessageState.message)
+            }
         }
         Scaffold(
             snackbarHost = {
                 SnackbarHost(hostState = snackbarHostState)
             },
             bottomBar = {
-                BottomButtonWithProgress(continueButtonState, progressState, onContinueToNextQuestion)
+                BottomButtonWithProgress(
+                    continueButtonState,
+                    progressState,
+                    onContinueToNextQuestion
+                )
             }
         ) { innerPadding ->
             Image(
@@ -115,7 +121,9 @@ fun GameScreen(
                 Image(
                     painter = painterResource(id = uiState.question.asset),
                     contentDescription = "Image of DnD Monster",
-                    modifier = Modifier.padding(16.dp).heightIn(max = 600.dp),
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .heightIn(max = 600.dp),
                     contentScale = ContentScale.FillBounds,
                 )
                 LazyVerticalGrid(
@@ -125,15 +133,21 @@ fun GameScreen(
                     items(uiState.question.nameList.size) {
                         val name = uiState.question.nameList[it]
                         Button(
-                            modifier = Modifier.padding(8.dp).height(80.dp),
+                            modifier = Modifier
+                                .padding(8.dp)
+                                .height(80.dp),
                             onClick = { onCheckAnswer(name) },
-                            shape = MaterialTheme.shapes.medium
+                            shape = MaterialTheme.shapes.medium,
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = MaterialTheme.colorScheme.secondary,
+                            ),
+                            border = ButtonDefaults.outlinedButtonBorder()
                         ) {
                             Text(
                                 text = name,
                                 style = MaterialTheme.typography.bodyLarge,
                                 textAlign = TextAlign.Center,
-                                )
+                            )
                         }
                     }
                 }
@@ -150,7 +164,9 @@ fun PreviewGameScreen() {
     GameScreen(
         uiState = DndGameState.InProgress(
             question = DndQuestion(
-                R.drawable.dnd_quiz_gibberingmouther, "Balor", listOf("Balor", "Basilisk", "Beholder", "Cockatrice")
+                R.drawable.dnd_quiz_gibberingmouther,
+                "Balor",
+                listOf("Balor", "Basilisk", "Beholder", "Cockatrice")
             )
         ),
         continueButtonState = true,
@@ -169,7 +185,9 @@ fun PreviewGameScreenWithJpeg() {
     GameScreen(
         uiState = DndGameState.InProgress(
             question = DndQuestion(
-                R.drawable.dnd_quiz_badger, "Balor", listOf("Balor", "Basilisk", "Beholder", "Cockatrice")
+                R.drawable.dnd_quiz_badger,
+                "Balor",
+                listOf("Balor", "Basilisk", "Beholder", "Cockatrice")
             )
         ),
         continueButtonState = false,
@@ -183,22 +201,36 @@ fun PreviewGameScreenWithJpeg() {
 }
 
 @Composable
-fun BottomButtonWithProgress(continueButtonState: Boolean, progressState: Float, onContinueToNextQuestion: () -> Unit) {
+fun BottomButtonWithProgress(
+    continueButtonState: Boolean,
+    progressState: Float,
+    onContinueToNextQuestion: () -> Unit
+) {
     Column {
         LinearProgressIndicator(
             progress = { progressState },
-            modifier = Modifier.fillMaxWidth().height(8.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(8.dp),
         )
         BottomAppBar(
             containerColor = Color.Transparent,
         ) {
             Button(
-                modifier = Modifier.fillMaxWidth().height(64.dp),
+                modifier = Modifier
+                    .padding(8.dp)
+                    .fillMaxWidth()
+                    .height(64.dp),
                 enabled = continueButtonState,
                 onClick = { onContinueToNextQuestion() },
                 shape = MaterialTheme.shapes.medium,
+                border = ButtonDefaults.outlinedButtonBorder(),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
+                    containerColor =
+                    if (continueButtonState)
+                        MaterialTheme.colorScheme.tertiary
+                    else
+                        MaterialTheme.colorScheme.secondary
                 )
             ) {
                 Text(text = "Continue")

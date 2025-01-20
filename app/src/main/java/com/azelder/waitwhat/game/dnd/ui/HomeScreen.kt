@@ -41,9 +41,10 @@ fun HomeScreen(onNavigateToGameScreen: () -> Unit) {
                             .background(Color.Transparent),
                         onClick = { onNavigateToGameScreen() },
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.primary
+                            containerColor = MaterialTheme.colorScheme.secondary
                         ),
-                        shape = MaterialTheme.shapes.medium
+                        shape = MaterialTheme.shapes.medium,
+                        border = ButtonDefaults.outlinedButtonBorder()
                     ) {
                         Text(text = "Lets play!")
                     }
