@@ -18,7 +18,8 @@ class DndViewModel @Inject constructor(
     // Additionally need to double check there won't be a race condition with startGame and
     // getNextQuestion in _state.
     private val totalQuestions = dndRepository.startGame()
-    private var numQuestionsRemaining = totalQuestions
+    var numQuestionsRemaining = totalQuestions
+        private set
 
     private val _state: MutableStateFlow<DndGameState> = MutableStateFlow(
         DndGameState.InProgress(dndRepository.getNextQuestion())
@@ -52,7 +53,7 @@ class DndViewModel @Inject constructor(
         else {
             _state.value = DndGameState.InProgress(dndRepository.getNextQuestion())
             _continueButtonState.value = false
-            _progressState.value = calculateProgress()
+            _progressState.value = if (totalQuestions > 0) calculateProgress() else 0f
         }
     }
 
