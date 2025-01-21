@@ -2,6 +2,7 @@ package com.azelder.waitwhat.game.dnd.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -65,14 +66,24 @@ fun HomeScreen(onNavigateToGameScreen: () -> Unit) {
                     containerColor = Color.Transparent
                 )
             ) {
-                Text(
-                    text = "Dungeons and Dragons Quiz!",
-                    modifier = Modifier
-                        .padding(16.dp),
-                    style = MaterialTheme.typography.headlineLarge,
-                    color = Color.White,
-                    textAlign = TextAlign.Center
-                )
+                Column {
+                    Text(
+                        text = "Dungeons and Dragons Quiz!",
+                        modifier = Modifier
+                            .padding(16.dp),
+                        style = MaterialTheme.typography.headlineLarge,
+                        color = Color.White,
+                        textAlign = TextAlign.Center
+                    )
+                    Text(
+                        text = "Test your knowledge of D&D monsters from the Monster Manual.",
+                        modifier = Modifier
+                            .padding(16.dp),
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = Color.White,
+                        textAlign = TextAlign.Center
+                    )
+                }
             }
         }
     }
