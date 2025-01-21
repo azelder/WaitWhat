@@ -1,4 +1,4 @@
-package com.azelder.waitwhat
+package com.azelder.waitwhat.testdoubles
 
 import com.azelder.waitwhat.game.dnd.data.DndRepository
 import com.azelder.waitwhat.game.dnd.model.DndQuestion

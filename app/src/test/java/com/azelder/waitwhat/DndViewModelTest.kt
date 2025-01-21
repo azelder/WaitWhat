@@ -3,6 +3,8 @@ package com.azelder.waitwhat
 import com.azelder.waitwhat.game.dnd.DndViewModel
 import com.azelder.waitwhat.game.dnd.SnackbarState
 import com.azelder.waitwhat.game.dnd.data.DndGameState
+import com.azelder.waitwhat.testdoubles.FakeDndRepository
+import com.azelder.waitwhat.testdoubles.getFakeDndQuestion
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Test

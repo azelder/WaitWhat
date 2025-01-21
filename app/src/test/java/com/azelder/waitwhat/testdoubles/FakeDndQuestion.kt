@@ -1,5 +1,6 @@
-package com.azelder.waitwhat
+package com.azelder.waitwhat.testdoubles
 
+import com.azelder.waitwhat.R
 import com.azelder.waitwhat.game.dnd.model.DndQuestion
 
 fun getFakeDndQuestion() = DndQuestion(
