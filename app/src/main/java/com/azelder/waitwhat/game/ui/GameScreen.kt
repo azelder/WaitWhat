@@ -164,7 +164,7 @@ fun PreviewGameScreen() {
     GameScreen(
         uiState = QuizGameState.InProgress(
             question = QuizQuestion(
-                R.drawable.dnd_quiz_gibberingmouther,
+                R.drawable.flag_ad,
                 "Balor",
                 listOf("Balor", "Basilisk", "Beholder", "Cockatrice")
             )
@@ -185,7 +185,7 @@ fun PreviewGameScreenWithJpeg() {
     GameScreen(
         uiState = QuizGameState.InProgress(
             question = QuizQuestion(
-                R.drawable.dnd_quiz_badger,
+                R.drawable.flag_ar,
                 "Balor",
                 listOf("Balor", "Basilisk", "Beholder", "Cockatrice")
             )

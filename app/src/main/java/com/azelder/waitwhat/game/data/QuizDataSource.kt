@@ -15,11 +15,11 @@ class QuizDataSource @Inject constructor() {
         // get a random monster from the question set that hasn't been asked yet
         val newQuestionToGuess = questionSet.random()
         // get random names from the entire monster name set, combine with the new monster
-        val guessList = dndAssetMap.keys.filter {
+        val guessList = flagAssetMap.keys.filter {
             it != newQuestionToGuess
         }.shuffled().take(3) + newQuestionToGuess
         return QuizQuestion(
-            dndAssetMap.getValue(newQuestionToGuess),
+            flagAssetMap.getValue(newQuestionToGuess),
             newQuestionToGuess,
             guessList.shuffled()
         )
@@ -27,7 +27,7 @@ class QuizDataSource @Inject constructor() {
 
     fun startGame() : Int {
         questionSet.clear()
-        questionSet.addAll(dndAssetMap.keys)
+        questionSet.addAll(flagAssetMap.keys)
         return questionSet.size
     }
 
