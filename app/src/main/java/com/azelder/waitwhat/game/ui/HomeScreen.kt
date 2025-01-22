@@ -1,4 +1,4 @@
-package com.azelder.waitwhat.game.dnd.ui
+package com.azelder.waitwhat.game.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

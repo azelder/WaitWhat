@@ -1,8 +1,8 @@
-package com.azelder.waitwhat.game.dnd
+package com.azelder.waitwhat.game
 
 import androidx.lifecycle.ViewModel
-import com.azelder.waitwhat.game.dnd.data.DndGameState
-import com.azelder.waitwhat.game.dnd.data.DndRepository
+import com.azelder.waitwhat.game.data.QuizGameState
+import com.azelder.waitwhat.game.data.QuizRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -10,21 +10,21 @@ import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
 @HiltViewModel
-class DndViewModel @Inject constructor(
-    private val dndRepository: DndRepository
+class GameViewModel @Inject constructor(
+    private val quizRepository: QuizRepository
 ) : ViewModel() {
 
     // might want to double check if this should be in a coroutine. or somewhere else?
     // Additionally need to double check there won't be a race condition with startGame and
     // getNextQuestion in _state.
-    private val totalQuestions = dndRepository.startGame()
+    private val totalQuestions = quizRepository.startGame()
     var numQuestionsRemaining = totalQuestions
         private set
 
-    private val _state: MutableStateFlow<DndGameState> = MutableStateFlow(
-        DndGameState.InProgress(dndRepository.getNextQuestion())
+    private val _state: MutableStateFlow<QuizGameState> = MutableStateFlow(
+        QuizGameState.InProgress(quizRepository.getNextQuestion())
     )
-    val gameState: StateFlow<DndGameState> = _state.asStateFlow()
+    val gameState: StateFlow<QuizGameState> = _state.asStateFlow()
     private val _answerResponseState = MutableStateFlow<SnackbarState>(SnackbarState.DoNothing)
     val answerResponseState: StateFlow<SnackbarState> = _answerResponseState.asStateFlow()
     private val _continueButtonState = MutableStateFlow(false)
@@ -34,11 +34,11 @@ class DndViewModel @Inject constructor(
 
     fun checkAnswer(choice: String) {
         if (
-            gameState.value is DndGameState.InProgress &&
-            choice == (gameState.value as DndGameState.InProgress).question.name
+            gameState.value is QuizGameState.InProgress &&
+            choice == (gameState.value as QuizGameState.InProgress).question.name
         ) {
             _continueButtonState.value = true
-            numQuestionsRemaining = dndRepository.setQuestionAnswered(choice)
+            numQuestionsRemaining = quizRepository.setQuestionAnswered(choice)
         } else {
             _answerResponseState.value =
                 SnackbarState.Announce("$choice is incorrect. Try again!")
@@ -47,11 +47,11 @@ class DndViewModel @Inject constructor(
 
     fun getNextQuestion() {
         if (numQuestionsRemaining == 0) {
-            dndRepository.endGame()
-            _state.value = DndGameState.Ended
+            quizRepository.endGame()
+            _state.value = QuizGameState.Ended
         }
         else {
-            _state.value = DndGameState.InProgress(dndRepository.getNextQuestion())
+            _state.value = QuizGameState.InProgress(quizRepository.getNextQuestion())
             _continueButtonState.value = false
             _progressState.value = if (totalQuestions > 0) calculateProgress() else 0f
         }

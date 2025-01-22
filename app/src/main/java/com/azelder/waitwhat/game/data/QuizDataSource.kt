@@ -1,9 +1,9 @@
-package com.azelder.waitwhat.game.dnd.data
+package com.azelder.waitwhat.game.data
 
-import com.azelder.waitwhat.game.dnd.model.DndQuestion
+import com.azelder.waitwhat.game.model.QuizQuestion
 import javax.inject.Inject
 
-class DndDataSource @Inject constructor() {
+class QuizDataSource @Inject constructor() {
 
     private val questionSet: MutableSet<String> = mutableSetOf()
 
@@ -11,16 +11,16 @@ class DndDataSource @Inject constructor() {
      * @throws NoSuchElementException if there are no more questions in the unasked question set
      */
     @Throws(NoSuchElementException::class)
-    fun getNextQuestion(): DndQuestion {
+    fun getNextQuestion(): QuizQuestion {
         // get a random monster from the question set that hasn't been asked yet
-        val newMonsterToGuess = questionSet.random()
+        val newQuestionToGuess = questionSet.random()
         // get random names from the entire monster name set, combine with the new monster
         val guessList = dndAssetMap.keys.filter {
-            it != newMonsterToGuess
-        }.shuffled().take(3) + newMonsterToGuess
-        return DndQuestion(
-            dndAssetMap.getValue(newMonsterToGuess),
-            newMonsterToGuess,
+            it != newQuestionToGuess
+        }.shuffled().take(3) + newQuestionToGuess
+        return QuizQuestion(
+            dndAssetMap.getValue(newQuestionToGuess),
+            newQuestionToGuess,
             guessList.shuffled()
         )
     }

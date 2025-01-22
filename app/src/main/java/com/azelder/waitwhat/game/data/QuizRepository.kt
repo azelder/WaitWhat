@@ -1,8 +1,8 @@
-package com.azelder.waitwhat.game.dnd.data
+package com.azelder.waitwhat.game.data
 
-import com.azelder.waitwhat.game.dnd.model.DndQuestion
+import com.azelder.waitwhat.game.model.QuizQuestion
 
-interface DndRepository {
+interface QuizRepository {
     /**
      * Boolean is to indicate success. This should probably be updated to a sealed game state.
      * @return the number of questions remaining in the game.
@@ -17,16 +17,16 @@ interface DndRepository {
     /**
      * Get the next question
      */
-    fun getNextQuestion(): DndQuestion
+    fun getNextQuestion(): QuizQuestion
 
     /**
      * Set the provided question as answered and return the new game state with new question if needed.
      */
-    fun setQuestionAnswered(monsterName: String): Int
+    fun setQuestionAnswered(answer: String): Int
 }
 
-sealed interface DndGameState {
-    data object NotStarted : DndGameState
-    data class InProgress(val question: DndQuestion) : DndGameState
-    data object Ended : DndGameState
+sealed interface QuizGameState {
+    data object NotStarted : QuizGameState
+    data class InProgress(val question: QuizQuestion) : QuizGameState
+    data object Ended : QuizGameState
 }

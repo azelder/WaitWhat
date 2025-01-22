@@ -1,4 +1,4 @@
-package com.azelder.waitwhat.game.dnd.data
+package com.azelder.waitwhat.game.data
 
 import com.azelder.waitwhat.R
 

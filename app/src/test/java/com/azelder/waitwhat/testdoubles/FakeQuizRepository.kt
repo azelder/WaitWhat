@@ -1,21 +1,21 @@
 package com.azelder.waitwhat.testdoubles
 
-import com.azelder.waitwhat.game.dnd.data.DndRepository
-import com.azelder.waitwhat.game.dnd.model.DndQuestion
+import com.azelder.waitwhat.game.data.QuizRepository
+import com.azelder.waitwhat.game.model.QuizQuestion
 
-class FakeDndRepository(
+class FakeQuizRepository(
     private val startingQuestions: Int = 4,
     private val remainingQuestions: Int = 2
-) : DndRepository {
+) : QuizRepository {
     override fun startGame(): Int {
         return startingQuestions
     }
 
-    override fun getNextQuestion(): DndQuestion {
-        return getFakeDndQuestion()
+    override fun getNextQuestion(): QuizQuestion {
+        return getFakeQuizQuestion()
     }
 
-    override fun setQuestionAnswered(monsterName: String): Int {
+    override fun setQuestionAnswered(answer: String): Int {
         return remainingQuestions
     }
 

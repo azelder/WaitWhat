@@ -1,4 +1,4 @@
-package com.azelder.waitwhat.game.dnd.ui
+package com.azelder.waitwhat.game.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
@@ -34,17 +34,17 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.azelder.waitwhat.R
-import com.azelder.waitwhat.game.dnd.DndViewModel
-import com.azelder.waitwhat.game.dnd.SnackbarState
-import com.azelder.waitwhat.game.dnd.data.DndGameState
-import com.azelder.waitwhat.game.dnd.model.DndQuestion
+import com.azelder.waitwhat.game.GameViewModel
+import com.azelder.waitwhat.game.SnackbarState
+import com.azelder.waitwhat.game.data.QuizGameState
+import com.azelder.waitwhat.game.model.QuizQuestion
 import com.azelder.waitwhat.ui.theme.WaitWhatTheme
 
 @Composable
 fun GameRoute(
     onNavigateBack: () -> Unit,
     onNavigateToEndScreen: () -> Unit,
-    viewModel: DndViewModel = hiltViewModel()
+    viewModel: GameViewModel = hiltViewModel()
 ) {
     val gameState by viewModel.gameState.collectAsStateWithLifecycle()
     val continueButtonState by viewModel.isCurrentQuestionAnsweredState.collectAsStateWithLifecycle()
@@ -53,13 +53,13 @@ fun GameRoute(
     val progressState by viewModel.progressState.collectAsStateWithLifecycle()
 
     when (gameState) {
-        is DndGameState.Ended -> {
+        is QuizGameState.Ended -> {
             onNavigateToEndScreen()
         }
 
-        is DndGameState.InProgress -> {
+        is QuizGameState.InProgress -> {
             GameScreen(
-                uiState = gameState as DndGameState.InProgress,
+                uiState = gameState as QuizGameState.InProgress,
                 continueButtonState = continueButtonState,
                 progressState = progressState,
                 answerMessageState = answerMessageState,
@@ -70,7 +70,7 @@ fun GameRoute(
             )
         }
 
-        is DndGameState.NotStarted -> {
+        is QuizGameState.NotStarted -> {
             // this might not be necessary?
         }
     }
@@ -78,7 +78,7 @@ fun GameRoute(
 
 @Composable
 fun GameScreen(
-    uiState: DndGameState.InProgress,
+    uiState: QuizGameState.InProgress,
     continueButtonState: Boolean,
     progressState: Float,
     answerMessageState: SnackbarState,
@@ -162,8 +162,8 @@ fun GameScreen(
 @Composable
 fun PreviewGameScreen() {
     GameScreen(
-        uiState = DndGameState.InProgress(
-            question = DndQuestion(
+        uiState = QuizGameState.InProgress(
+            question = QuizQuestion(
                 R.drawable.dnd_quiz_gibberingmouther,
                 "Balor",
                 listOf("Balor", "Basilisk", "Beholder", "Cockatrice")
@@ -183,8 +183,8 @@ fun PreviewGameScreen() {
 @Composable
 fun PreviewGameScreenWithJpeg() {
     GameScreen(
-        uiState = DndGameState.InProgress(
-            question = DndQuestion(
+        uiState = QuizGameState.InProgress(
+            question = QuizQuestion(
                 R.drawable.dnd_quiz_badger,
                 "Balor",
                 listOf("Balor", "Basilisk", "Beholder", "Cockatrice")
