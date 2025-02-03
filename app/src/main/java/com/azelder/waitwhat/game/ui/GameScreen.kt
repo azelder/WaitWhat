@@ -3,10 +3,10 @@ package com.azelder.waitwhat.game.ui
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -123,7 +123,8 @@ fun GameScreen(
                     contentDescription = "Image of DnD Monster",
                     modifier = Modifier
                         .padding(16.dp)
-                        .heightIn(max = 600.dp),
+                        .fillMaxWidth()
+                        .aspectRatio(ratio = 5f/3f, matchHeightConstraintsFirst = false),
                     contentScale = ContentScale.FillBounds,
                 )
                 LazyVerticalGrid(
@@ -211,6 +212,7 @@ fun BottomButtonWithProgress(
             progress = { progressState },
             modifier = Modifier
                 .fillMaxWidth()
+                .padding(12.dp)
                 .height(8.dp),
         )
         BottomAppBar(

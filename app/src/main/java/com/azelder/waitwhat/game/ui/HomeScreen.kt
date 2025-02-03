@@ -95,7 +95,7 @@ fun HomeScreen(onNavigateToGameScreen: () -> Unit) {
                         modifier = Modifier
                             .padding(16.dp),
                         style = MaterialTheme.typography.headlineLarge,
-                        color = Color.White,
+                        color = MaterialTheme.colorScheme.secondary,
                         textAlign = TextAlign.Center
                     )
                     Text(
@@ -103,7 +103,7 @@ fun HomeScreen(onNavigateToGameScreen: () -> Unit) {
                         modifier = Modifier
                             .padding(16.dp),
                         style = MaterialTheme.typography.bodyLarge,
-                        color = Color.White,
+                        color = MaterialTheme.colorScheme.secondary,
                         textAlign = TextAlign.Center
                     )
                 }
