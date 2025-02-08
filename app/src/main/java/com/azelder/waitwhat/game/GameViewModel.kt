@@ -32,6 +32,10 @@ class GameViewModel @Inject constructor(
     private val _progressState = MutableStateFlow(calculateProgress())
     val progressState = _progressState.asStateFlow()
 
+    private var _wrongGuesses = MutableStateFlow(setOf<String>())
+    val wrongGuessState: StateFlow<Set<String>> = _wrongGuesses.asStateFlow()
+
+
     fun checkAnswer(choice: String) {
         if (
             gameState.value is QuizGameState.InProgress &&
@@ -42,6 +46,7 @@ class GameViewModel @Inject constructor(
         } else {
             _answerResponseState.value =
                 SnackbarState.Announce("$choice is incorrect. Try again!")
+            _wrongGuesses.value += choice
         }
     }
 
@@ -49,11 +54,13 @@ class GameViewModel @Inject constructor(
         if (numQuestionsRemaining == 0) {
             quizRepository.endGame()
             _state.value = QuizGameState.Ended
+            _wrongGuesses.value = setOf()
         }
         else {
             _state.value = QuizGameState.InProgress(quizRepository.getNextQuestion())
             _continueButtonState.value = false
             _progressState.value = if (totalQuestions > 0) calculateProgress() else 0f
+            _wrongGuesses.value = setOf()
         }
     }
 

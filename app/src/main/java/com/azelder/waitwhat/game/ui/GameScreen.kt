@@ -51,6 +51,7 @@ fun GameRoute(
     val answerMessageState by viewModel.answerResponseState.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
     val progressState by viewModel.progressState.collectAsStateWithLifecycle()
+    val wrongGuessState by viewModel.wrongGuessState.collectAsStateWithLifecycle()
 
     when (gameState) {
         is QuizGameState.Ended -> {
@@ -64,6 +65,7 @@ fun GameRoute(
                 progressState = progressState,
                 answerMessageState = answerMessageState,
                 snackbarHostState = snackbarHostState,
+                wrongGuessState = wrongGuessState,
                 onNavigateBack = onNavigateBack,
                 onCheckAnswer = { viewModel.checkAnswer(it) },
                 onContinueToNextQuestion = { viewModel.getNextQuestion() }
@@ -83,6 +85,7 @@ fun GameScreen(
     progressState: Float,
     answerMessageState: SnackbarState,
     snackbarHostState: SnackbarHostState,
+    wrongGuessState: Set<String>,
     onNavigateBack: () -> Unit,
     onCheckAnswer: (String) -> Unit,
     onContinueToNextQuestion: () -> Unit
@@ -124,7 +127,7 @@ fun GameScreen(
                     modifier = Modifier
                         .padding(16.dp)
                         .fillMaxWidth()
-                        .aspectRatio(ratio = 5f/3f, matchHeightConstraintsFirst = false),
+                        .aspectRatio(ratio = 5f / 3f, matchHeightConstraintsFirst = false),
                     contentScale = ContentScale.FillBounds,
                 )
                 LazyVerticalGrid(
@@ -133,15 +136,17 @@ fun GameScreen(
                 ) {
                     items(uiState.question.nameList.size) {
                         val name = uiState.question.nameList[it]
+                        val isGuessedWrong = wrongGuessState.contains(name)
                         Button(
                             modifier = Modifier
                                 .padding(8.dp)
-                                .height(80.dp),
+                                .height(100.dp),
                             onClick = { onCheckAnswer(name) },
                             shape = MaterialTheme.shapes.medium,
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = MaterialTheme.colorScheme.secondary,
                             ),
+                            enabled = !isGuessedWrong,
                             border = ButtonDefaults.outlinedButtonBorder()
                         ) {
                             Text(
@@ -174,6 +179,7 @@ fun PreviewGameScreen() {
         progressState = 0.5f,
         snackbarHostState = SnackbarHostState(),
         answerMessageState = SnackbarState.DoNothing,
+        wrongGuessState = setOf(),
         onNavigateBack = {},
         onCheckAnswer = {},
         onContinueToNextQuestion = {}
@@ -195,6 +201,7 @@ fun PreviewGameScreenWithJpeg() {
         progressState = 0.5f,
         snackbarHostState = SnackbarHostState(),
         answerMessageState = SnackbarState.DoNothing,
+        wrongGuessState = setOf(),
         onNavigateBack = {},
         onCheckAnswer = {},
         onContinueToNextQuestion = {}
