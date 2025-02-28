@@ -12,9 +12,7 @@ class QuizDataSource @Inject constructor() {
      */
     @Throws(NoSuchElementException::class)
     fun getNextQuestion(): QuizQuestion {
-        // get a random monster from the question set that hasn't been asked yet
         val newQuestionToGuess = questionSet.random()
-        // get random names from the entire monster name set, combine with the new monster
         val guessList = flagAssetMap.keys.filter {
             it != newQuestionToGuess
         }.shuffled().take(3) + newQuestionToGuess

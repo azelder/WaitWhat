@@ -14,9 +14,6 @@ class GameViewModel @Inject constructor(
     private val quizRepository: QuizRepository
 ) : ViewModel() {
 
-    // might want to double check if this should be in a coroutine. or somewhere else?
-    // Additionally need to double check there won't be a race condition with startGame and
-    // getNextQuestion in _state.
     private val totalQuestions = quizRepository.startGame()
     var numQuestionsRemaining = totalQuestions
         private set
