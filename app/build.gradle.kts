@@ -5,6 +5,13 @@ plugins {
     alias(libs.plugins.serialization)
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.apollo)
+}
+
+apollo {
+    service("service") {
+        packageName.set("com.azelder.waitwhat")
+    }
 }
 
 android {
@@ -55,6 +62,7 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.hilt.android)
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.apollo.runtime)
 
     ksp(libs.hilt.compiler)
 
