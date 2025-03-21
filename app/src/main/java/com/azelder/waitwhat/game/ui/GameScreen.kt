@@ -3,7 +3,6 @@ package com.azelder.waitwhat.game.ui
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -32,6 +31,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.azelder.waitwhat.R
@@ -122,14 +122,11 @@ fun GameScreen(
                     .fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                Image(
-                    painter = painterResource(id = uiState.question.asset),
-                    contentDescription = "Image of DnD Monster",
+                Text(
+                    text = uiState.question.asset,
+                    fontSize = 200.sp,
                     modifier = Modifier
                         .padding(16.dp)
-                        .fillMaxWidth()
-                        .aspectRatio(ratio = 5f / 3f, matchHeightConstraintsFirst = false),
-                    contentScale = ContentScale.FillBounds,
                 )
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(2),
@@ -171,7 +168,7 @@ fun PreviewGameScreen() {
     GameScreen(
         uiState = QuizGameState.InProgress(
             question = QuizQuestion(
-                R.drawable.flag_ad,
+                "ad",
                 "Balor",
                 listOf("Balor", "Basilisk", "Beholder", "Cockatrice")
             )
@@ -193,7 +190,7 @@ fun PreviewGameScreenWithJpeg() {
     GameScreen(
         uiState = QuizGameState.InProgress(
             question = QuizQuestion(
-                R.drawable.flag_ar,
+                "ar",
                 "Balor",
                 listOf("Balor", "Basilisk", "Beholder", "Cockatrice")
             )

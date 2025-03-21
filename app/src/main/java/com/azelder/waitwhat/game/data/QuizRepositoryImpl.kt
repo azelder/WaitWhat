@@ -6,7 +6,7 @@ import javax.inject.Inject
 class QuizRepositoryImpl @Inject constructor(
     private val dataSource: QuizDataSource
 ) : QuizRepository {
-    override fun startGame(): Int {
+    override suspend fun startGame(): Int {
         return dataSource.startGame()
     }
 

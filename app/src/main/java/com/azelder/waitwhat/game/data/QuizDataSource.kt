@@ -1,10 +1,13 @@
 package com.azelder.waitwhat.game.data
 
+import com.azelder.waitwhat.game.data.model.Country
 import com.azelder.waitwhat.game.model.QuizQuestion
 import javax.inject.Inject
 
-class QuizDataSource @Inject constructor() {
-
+class QuizDataSource @Inject constructor(
+    private val countryDataSource: CountryDataSource
+) {
+    private var countryMap: MutableMap<String, Country> = mutableMapOf()
     private val questionSet: MutableSet<String> = mutableSetOf()
 
     /**
@@ -13,19 +16,24 @@ class QuizDataSource @Inject constructor() {
     @Throws(NoSuchElementException::class)
     fun getNextQuestion(): QuizQuestion {
         val newQuestionToGuess = questionSet.random()
-        val guessList = flagAssetMap.keys.filter {
+        val guessList = countryMap.keys.filter {
             it != newQuestionToGuess
         }.shuffled().take(3) + newQuestionToGuess
         return QuizQuestion(
-            flagAssetMap.getValue(newQuestionToGuess),
+            countryMap[newQuestionToGuess]?.emoji ?: "",
             newQuestionToGuess,
             guessList.shuffled()
         )
     }
 
-    fun startGame() : Int {
+    suspend fun startGame(): Int {
+        countryMap.putAll(
+            countryDataSource.getCountries().map { country ->
+                country.name to country
+            }
+        )
         questionSet.clear()
-        questionSet.addAll(flagAssetMap.keys)
+        questionSet.addAll(countryMap.keys)
         return questionSet.size
     }
 
@@ -34,7 +42,7 @@ class QuizDataSource @Inject constructor() {
         // TODO track results
     }
 
-    fun setQuestionAnswered(monsterName: String) : Int {
+    fun setQuestionAnswered(monsterName: String): Int {
         questionSet.remove(monsterName)
         return questionSet.size
     }

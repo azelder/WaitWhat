@@ -7,7 +7,7 @@ interface QuizRepository {
      * Boolean is to indicate success. This should probably be updated to a sealed game state.
      * @return the number of questions remaining in the game.
      */
-    fun startGame(): Int
+    suspend fun startGame(): Int
 
     /**
      * End the game and reset the data source.

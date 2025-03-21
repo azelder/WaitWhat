@@ -1,25 +1,34 @@
 package com.azelder.waitwhat.game
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.azelder.waitwhat.game.data.QuizGameState
 import com.azelder.waitwhat.game.data.QuizRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class GameViewModel @Inject constructor(
     private val quizRepository: QuizRepository
 ) : ViewModel() {
+    private var totalQuestions: Int = -1
+    var numQuestionsRemaining: Int = -1
+        private set
 
     init {
-        getNextQuestion()
+//        getNextQuestion()
+        viewModelScope.launch {
+            quizRepository.startGame().apply {
+                totalQuestions = this
+                numQuestionsRemaining = this
+            }
+            getNextQuestion()
+        }
     }
-    private val totalQuestions = quizRepository.startGame()
-    var numQuestionsRemaining = totalQuestions
-        private set
 
     private val _state: MutableStateFlow<QuizGameState> = MutableStateFlow(
         QuizGameState.NotStarted

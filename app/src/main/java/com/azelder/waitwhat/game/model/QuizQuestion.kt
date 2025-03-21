@@ -1,3 +1,7 @@
 package com.azelder.waitwhat.game.model
 
-data class QuizQuestion(val asset: Int, val name: String, val nameList: List<String>)
+data class QuizQuestion(
+    val asset: String,
+    val name: String,
+    val nameList: List<String>
+)

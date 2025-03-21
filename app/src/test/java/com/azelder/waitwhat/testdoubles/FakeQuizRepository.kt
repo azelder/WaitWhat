@@ -7,7 +7,7 @@ class FakeQuizRepository(
     private val startingQuestions: Int = 4,
     private val remainingQuestions: Int = 2
 ) : QuizRepository {
-    override fun startGame(): Int {
+    override suspend fun startGame(): Int {
         return startingQuestions
     }
 
