@@ -14,12 +14,15 @@ class GameViewModel @Inject constructor(
     private val quizRepository: QuizRepository
 ) : ViewModel() {
 
+    init {
+        getNextQuestion()
+    }
     private val totalQuestions = quizRepository.startGame()
     var numQuestionsRemaining = totalQuestions
         private set
 
     private val _state: MutableStateFlow<QuizGameState> = MutableStateFlow(
-        QuizGameState.InProgress(quizRepository.getNextQuestion())
+        QuizGameState.NotStarted
     )
     val gameState: StateFlow<QuizGameState> = _state.asStateFlow()
     private val _answerResponseState = MutableStateFlow<SnackbarState>(SnackbarState.DoNothing)
