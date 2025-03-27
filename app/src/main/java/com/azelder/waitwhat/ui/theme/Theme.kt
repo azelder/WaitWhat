@@ -1,59 +1,64 @@
 package com.azelder.waitwhat.ui.theme
 
-import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
-
-private val DarkColorScheme = darkColorScheme(
-    primary = Grey,
-    secondary = DarkGrey,
-    tertiary = Green,
-    onTertiary = DarkGreen,
-    onPrimary = Color.White,
-    error = Color.Black,
-    onError = Color.Red
-)
 
 private val LightColorScheme = lightColorScheme(
-    primary = Grey,
-    secondary = DarkGrey,
-    tertiary = Green,
-    onTertiary = DarkGreen,
+    primary = Viridian,
     onPrimary = Color.White,
-    error = Color.Black,
-    onError = Color.Red
+    primaryContainer = ViridianLight,
+    onPrimaryContainer = OnViridianDark,
 
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
+    secondary = Peach,
+    onSecondary = Color.Black,
+    secondaryContainer = PeachLight,
+    onSecondaryContainer = LightCoral,
+
+    tertiary = Coral,
     onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
+
+    background = LightBackground,
+    onBackground = LightOnBackground,
+    surface = LightSurface,
+    onSurface = LightOnSurface,
+
+    error = ErrorLight,
+    onError = Color.White
+)
+
+private val DarkColorScheme = darkColorScheme(
+    primary = ViridianLight,
+    onPrimary = Color(0xFF00382B),
+    primaryContainer = ViridianDark,
+    onPrimaryContainer = ViridianLight,
+
+    secondary = Peach,
+    onSecondary = Color(0xFF3C2000),
+    secondaryContainer = PeachDark,
+    onSecondaryContainer = PeachLight,
+
+    tertiary = Coral,
+    onTertiary = Color(0xFF3C0A00),
+
+    background = DarkBackground,
+    onBackground = DarkOnBackground,
+    surface = DarkSurface,
+    onSurface = DarkOnSurface,
+
+    error = ErrorDark,
+    onError = Color.Black
 )
 
 @Composable
 fun WaitWhatTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
-
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }

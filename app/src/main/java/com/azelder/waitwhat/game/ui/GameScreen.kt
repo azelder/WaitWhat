@@ -1,6 +1,6 @@
 package com.azelder.waitwhat.game.ui
 
-import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,15 +26,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.azelder.waitwhat.R
 import com.azelder.waitwhat.game.GameViewModel
 import com.azelder.waitwhat.game.SnackbarState
 import com.azelder.waitwhat.game.data.QuizGameState
@@ -109,17 +107,11 @@ fun GameScreen(
                 )
             }
         ) { innerPadding ->
-            Image(
-                painter = painterResource(id = R.drawable.dnd_parchment),
-                contentDescription = null,
-                modifier = Modifier
-                    .fillMaxSize(),
-                contentScale = ContentScale.FillBounds
-            )
             Column(
                 modifier = Modifier
                     .padding(innerPadding)
-                    .fillMaxSize(),
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.background),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
@@ -142,7 +134,7 @@ fun GameScreen(
                             onClick = { onCheckAnswer(name) },
                             shape = MaterialTheme.shapes.medium,
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = MaterialTheme.colorScheme.secondary,
+                                containerColor = MaterialTheme.colorScheme.primary,
                             ),
                             enabled = !isGuessedWrong,
                             border = ButtonDefaults.outlinedButtonBorder()
@@ -162,15 +154,15 @@ fun GameScreen(
     }
 }
 
-@Preview
+@PreviewLightDark
 @Composable
 fun PreviewGameScreen() {
     GameScreen(
         uiState = QuizGameState.InProgress(
             question = QuizQuestion(
-                "ad",
-                "Balor",
-                listOf("Balor", "Basilisk", "Beholder", "Cockatrice")
+                "\uD83C\uDDE6\uD83C\uDDEA",
+                "Sudan",
+                listOf("Sudan", "United States", "Democratic Republic of Congo", "China")
             )
         ),
         continueButtonState = true,
@@ -191,8 +183,8 @@ fun PreviewGameScreenWithJpeg() {
         uiState = QuizGameState.InProgress(
             question = QuizQuestion(
                 "\uD83C\uDDE6\uD83C\uDDEA",
-                "Balor",
-                listOf("Balor", "Basilisk", "Beholder", "Cockatrice")
+                "Sudan",
+                listOf("Sudan", "United States", "Democratic Republic of Congo", "China")
             )
         ),
         continueButtonState = false,
@@ -208,7 +200,7 @@ fun PreviewGameScreenWithJpeg() {
 
 @Composable
 fun BottomButtonWithProgress(
-    continueButtonState: Boolean,
+    continueButtonEnabled: Boolean,
     progressState: Float,
     onContinueToNextQuestion: () -> Unit
 ) {
@@ -228,14 +220,14 @@ fun BottomButtonWithProgress(
                     .padding(8.dp)
                     .fillMaxWidth()
                     .height(64.dp),
-                enabled = continueButtonState,
+                enabled = continueButtonEnabled,
                 onClick = { onContinueToNextQuestion() },
                 shape = MaterialTheme.shapes.medium,
                 border = ButtonDefaults.outlinedButtonBorder(),
                 colors = ButtonDefaults.buttonColors(
                     containerColor =
-                    if (continueButtonState)
-                        MaterialTheme.colorScheme.tertiary
+                    if (continueButtonEnabled)
+                        MaterialTheme.colorScheme.primary
                     else
                         MaterialTheme.colorScheme.secondary
                 )

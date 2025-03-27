@@ -23,13 +23,14 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.azelder.waitwhat.R
 import com.azelder.waitwhat.ui.theme.WaitWhatTheme
@@ -64,7 +65,7 @@ fun HomeScreen(onNavigateToGameScreen: () -> Unit) {
                             .background(Color.Transparent),
                         onClick = { onNavigateToGameScreen() },
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.secondary
+                            containerColor = MaterialTheme.colorScheme.primary
                         ),
                         shape = MaterialTheme.shapes.medium,
                         border = ButtonDefaults.outlinedButtonBorder()
@@ -83,19 +84,21 @@ fun HomeScreen(onNavigateToGameScreen: () -> Unit) {
             )
             Card(
                 modifier = Modifier
-                    .padding(innerPadding)
+                    .padding(vertical = innerPadding.calculateTopPadding(), horizontal = 12.dp)
                     .fillMaxWidth(),
                 colors = CardDefaults.cardColors(
-                    containerColor = Color.Transparent
+                    containerColor = MaterialTheme.colorScheme.background
                 )
             ) {
-                Column {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
                     Text(
-                        text = "Welcome to Wait What!?",
+                        text = "Welcome!",
                         modifier = Modifier
                             .padding(16.dp),
                         style = MaterialTheme.typography.headlineLarge,
-                        color = MaterialTheme.colorScheme.secondary,
+                        color = MaterialTheme.colorScheme.onBackground,
                         textAlign = TextAlign.Center
                     )
                     Text(
@@ -103,7 +106,7 @@ fun HomeScreen(onNavigateToGameScreen: () -> Unit) {
                         modifier = Modifier
                             .padding(16.dp),
                         style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.secondary,
+                        color = MaterialTheme.colorScheme.onBackground,
                         textAlign = TextAlign.Center
                     )
                 }
@@ -113,7 +116,7 @@ fun HomeScreen(onNavigateToGameScreen: () -> Unit) {
 }
 
 @Composable
-@Preview
+@PreviewLightDark
 fun HomeScreenPreview() {
     HomeScreen(onNavigateToGameScreen = {})
 }
