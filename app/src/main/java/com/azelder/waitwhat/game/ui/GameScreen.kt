@@ -1,6 +1,7 @@
 package com.azelder.waitwhat.game.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -57,6 +58,10 @@ fun GameRoute(
             onNavigateToEndScreen()
         }
 
+        is QuizGameState.ChooseContinent -> {
+
+        }
+
         is QuizGameState.InProgress -> {
             GameScreen(
                 uiState = gameState as QuizGameState.InProgress,
@@ -72,7 +77,12 @@ fun GameRoute(
         }
 
         is QuizGameState.NotStarted -> {
-            CircularProgressIndicator()
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
         }
     }
 }
@@ -236,4 +246,15 @@ fun BottomButtonWithProgress(
             }
         }
     }
+}
+
+@Composable
+fun ChooseContinent() {
+
+}
+
+@PreviewLightDark
+@Composable
+fun PreviewChooseContinent() {
+
 }

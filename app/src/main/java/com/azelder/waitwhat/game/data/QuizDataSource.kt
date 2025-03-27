@@ -26,9 +26,15 @@ class QuizDataSource @Inject constructor(
         )
     }
 
-    suspend fun startGame(): Int {
+    suspend fun startGame(continentCode: String? = null): Int {
+        val countries = if (continentCode != null) {
+            countryDataSource.getCountriesOnContinent(continentCode)
+        } else {
+            countryDataSource.getCountries()
+        }
+
         countryMap.putAll(
-            countryDataSource.getCountries().map { country ->
+            countries.map { country ->
                 country.name to country
             }
         )

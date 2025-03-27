@@ -4,5 +4,5 @@ data class Country(
     val code: String,
     val name: String,
     val emoji: String,
-    val emojiU: String,
+    val emojiU: String? = null,
 )

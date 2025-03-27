@@ -1,24 +1,30 @@
 package com.azelder.waitwhat.game.data
 
+import com.azelder.waitwhat.game.data.model.Continent
 import com.azelder.waitwhat.game.model.QuizQuestion
 import javax.inject.Inject
 
 class QuizRepositoryImpl @Inject constructor(
-    private val dataSource: QuizDataSource
+    private val quizDataSource: QuizDataSource,
+    private val countryDataSource: CountryDataSource
 ) : QuizRepository {
-    override suspend fun startGame(): Int {
-        return dataSource.startGame()
+    override suspend fun getContinents(): List<Continent> {
+        return countryDataSource.getContinents()
+    }
+
+    override suspend fun startGame(continentCode: String?): Int {
+        return quizDataSource.startGame(continentCode)
     }
 
     override fun endGame() {
-        dataSource.endGame()
+        quizDataSource.endGame()
     }
 
     override fun getNextQuestion(): QuizQuestion {
-        return dataSource.getNextQuestion()
+        return quizDataSource.getNextQuestion()
     }
 
     override fun setQuestionAnswered(answer: String): Int {
-        return dataSource.setQuestionAnswered(answer)
+        return quizDataSource.setQuestionAnswered(answer)
     }
 }

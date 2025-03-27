@@ -19,17 +19,6 @@ class GameViewModel @Inject constructor(
     var numQuestionsRemaining: Int = -1
         private set
 
-    init {
-//        getNextQuestion()
-        viewModelScope.launch {
-            quizRepository.startGame().apply {
-                totalQuestions = this
-                numQuestionsRemaining = this
-            }
-            getNextQuestion()
-        }
-    }
-
     private val _state: MutableStateFlow<QuizGameState> = MutableStateFlow(
         QuizGameState.NotStarted
     )
@@ -44,6 +33,23 @@ class GameViewModel @Inject constructor(
     private var _wrongGuesses = MutableStateFlow(setOf<String>())
     val wrongGuessState: StateFlow<Set<String>> = _wrongGuesses.asStateFlow()
 
+    init {
+        viewModelScope.launch {
+            quizRepository.getContinents().apply {
+                _state.value = QuizGameState.ChooseContinent(this)
+            }
+        }
+    }
+
+    fun startGame(code: String) {
+        viewModelScope.launch {
+            quizRepository.startGame().apply {
+                totalQuestions = this
+                numQuestionsRemaining = this
+            }
+            getNextQuestion()
+        }
+    }
 
     fun checkAnswer(choice: String) {
         if (
