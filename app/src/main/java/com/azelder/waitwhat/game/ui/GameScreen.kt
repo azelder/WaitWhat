@@ -190,7 +190,7 @@ fun PreviewGameScreenWithJpeg() {
     GameScreen(
         uiState = QuizGameState.InProgress(
             question = QuizQuestion(
-                "ar",
+                "\uD83C\uDDE6\uD83C\uDDEA",
                 "Balor",
                 listOf("Balor", "Basilisk", "Beholder", "Cockatrice")
             )
