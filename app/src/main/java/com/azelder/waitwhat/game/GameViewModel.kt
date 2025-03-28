@@ -16,10 +16,15 @@ import javax.inject.Inject
 class GameViewModel @Inject constructor(
     private val quizRepository: QuizRepository
 ) : ViewModel() {
+    // Note that these aren't state flows because they are closely ties to the continueButtonState
+    // so we don't need to worry about them being out of date when recomposition triggers.
     var totalQuestions: Int = -1
         private set
     var numQuestionsRemaining: Int = -1
         private set
+    var perfectAnswers: Int = 0
+        private set
+    var continent: String? = ""
 
     private val _state: MutableStateFlow<QuizGameState> = MutableStateFlow(
         QuizGameState.NotStarted
@@ -46,6 +51,7 @@ class GameViewModel @Inject constructor(
     }
 
     fun startGame(code: String?) {
+        continent = code
         viewModelScope.launch {
             quizRepository.startGame(code).apply {
                 totalQuestions = this
@@ -62,6 +68,9 @@ class GameViewModel @Inject constructor(
         ) {
             _continueButtonState.value = true
             numQuestionsRemaining = quizRepository.setQuestionAnswered(choice)
+            // here we want this to record if the user got it right on the first try.
+            if (_wrongGuesses.value.isEmpty())
+                perfectAnswers++
         } else {
             _answerResponseState.value =
                 SnackbarState.Announce("$choice is incorrect. Try again!")
@@ -70,16 +79,15 @@ class GameViewModel @Inject constructor(
     }
 
     fun getNextQuestion() {
+        _wrongGuesses.value = setOf()
         if (numQuestionsRemaining == 0) {
             quizRepository.endGame()
             _state.value = QuizGameState.Ended
-            _wrongGuesses.value = setOf()
         }
         else {
             _state.value = QuizGameState.InProgress(quizRepository.getNextQuestion())
             _continueButtonState.value = false
             _progressState.value = if (totalQuestions > 0) calculateProgress() else 0f
-            _wrongGuesses.value = setOf()
         }
     }
 
