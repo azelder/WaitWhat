@@ -79,7 +79,9 @@ fun GameRoute(
                 wrongGuessState = wrongGuessState,
                 onNavigateBack = onNavigateBack,
                 onCheckAnswer = { viewModel.checkAnswer(it) },
-                onContinueToNextQuestion = { viewModel.getNextQuestion() }
+                onContinueToNextQuestion = { viewModel.getNextQuestion() },
+                totalQuestions = viewModel.totalQuestions,
+                questionsRemaining = viewModel.numQuestionsRemaining
             )
         }
 
@@ -104,7 +106,9 @@ fun GameScreen(
     wrongGuessState: Set<String>,
     onNavigateBack: () -> Unit,
     onCheckAnswer: (String) -> Unit,
-    onContinueToNextQuestion: () -> Unit
+    onContinueToNextQuestion: () -> Unit,
+    totalQuestions: Int,
+    questionsRemaining: Int
 ) {
     WaitWhatTheme {
         LaunchedEffect(answerMessageState) {
@@ -120,7 +124,9 @@ fun GameScreen(
                 BottomButtonWithProgress(
                     continueButtonState,
                     progressState,
-                    onContinueToNextQuestion
+                    onContinueToNextQuestion,
+                    totalQuestions,
+                    questionsRemaining
                 )
             }
         ) { innerPadding ->
@@ -164,8 +170,6 @@ fun GameScreen(
                         }
                     }
                 }
-
-
             }
         }
     }
@@ -189,7 +193,9 @@ fun PreviewGameScreen() {
         wrongGuessState = setOf(),
         onNavigateBack = {},
         onCheckAnswer = {},
-        onContinueToNextQuestion = {}
+        onContinueToNextQuestion = {},
+        totalQuestions = 4,
+        questionsRemaining = 2
     )
 }
 
@@ -211,7 +217,9 @@ fun PreviewGameScreenWithJpeg() {
         wrongGuessState = setOf(),
         onNavigateBack = {},
         onCheckAnswer = {},
-        onContinueToNextQuestion = {}
+        onContinueToNextQuestion = {},
+        totalQuestions = 4,
+        questionsRemaining = 2
     )
 }
 
@@ -219,16 +227,30 @@ fun PreviewGameScreenWithJpeg() {
 fun BottomButtonWithProgress(
     continueButtonEnabled: Boolean,
     progressState: Float,
-    onContinueToNextQuestion: () -> Unit
+    onContinueToNextQuestion: () -> Unit,
+    totalQuestions: Int,
+    questionsRemaining: Int
 ) {
     Column {
-        LinearProgressIndicator(
-            progress = { progressState },
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(12.dp)
-                .height(8.dp),
-        )
+                .padding(horizontal = 12.dp, vertical = 4.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = "Questions: ${totalQuestions - questionsRemaining}/$totalQuestions",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+            LinearProgressIndicator(
+                progress = { progressState },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp)
+                    .height(8.dp),
+            )
+        }
         BottomAppBar(
             containerColor = Color.Transparent,
         ) {
@@ -258,7 +280,7 @@ fun BottomButtonWithProgress(
 @Composable
 fun ChooseContinent(
     continents: List<Continent>,
-    onContinentSelected: (String) -> Unit
+    onContinentSelected: (String?) -> Unit
 ) {
     WaitWhatTheme {
         Scaffold(

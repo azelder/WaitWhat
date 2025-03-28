@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.azelder.waitwhat.game.data.QuizGameState
 import com.azelder.waitwhat.game.data.QuizRepository
+import com.azelder.waitwhat.game.data.model.Continent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,7 +16,8 @@ import javax.inject.Inject
 class GameViewModel @Inject constructor(
     private val quizRepository: QuizRepository
 ) : ViewModel() {
-    private var totalQuestions: Int = -1
+    var totalQuestions: Int = -1
+        private set
     var numQuestionsRemaining: Int = -1
         private set
 
@@ -36,12 +38,14 @@ class GameViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             quizRepository.getContinents().apply {
-                _state.value = QuizGameState.ChooseContinent(this)
+                _state.value = QuizGameState.ChooseContinent(
+                    continents = this + Continent(null, "World")
+                )
             }
         }
     }
 
-    fun startGame(code: String) {
+    fun startGame(code: String?) {
         viewModelScope.launch {
             quizRepository.startGame(code).apply {
                 totalQuestions = this
