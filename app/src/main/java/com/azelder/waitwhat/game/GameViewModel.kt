@@ -43,7 +43,7 @@ class GameViewModel @Inject constructor(
 
     fun startGame(code: String) {
         viewModelScope.launch {
-            quizRepository.startGame().apply {
+            quizRepository.startGame(code).apply {
                 totalQuestions = this
                 numQuestionsRemaining = this
             }

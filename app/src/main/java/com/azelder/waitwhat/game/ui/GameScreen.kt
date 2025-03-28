@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -37,6 +38,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.azelder.waitwhat.game.GameViewModel
 import com.azelder.waitwhat.game.SnackbarState
 import com.azelder.waitwhat.game.data.QuizGameState
+import com.azelder.waitwhat.game.data.model.Continent
 import com.azelder.waitwhat.game.model.QuizQuestion
 import com.azelder.waitwhat.ui.theme.WaitWhatTheme
 
@@ -59,7 +61,12 @@ fun GameRoute(
         }
 
         is QuizGameState.ChooseContinent -> {
-
+            ChooseContinent(
+                continents = (gameState as QuizGameState.ChooseContinent).continents,
+                onContinentSelected = { continentCode ->
+                    viewModel.startGame(continentCode)
+                }
+            )
         }
 
         is QuizGameState.InProgress -> {
@@ -249,8 +256,54 @@ fun BottomButtonWithProgress(
 }
 
 @Composable
-fun ChooseContinent() {
-
+fun ChooseContinent(
+    continents: List<Continent>,
+    onContinentSelected: (String) -> Unit
+) {
+    WaitWhatTheme {
+        Scaffold(
+            modifier = Modifier.fillMaxSize(),
+            containerColor = MaterialTheme.colorScheme.background
+        ) { padding ->
+            Column(
+                modifier = Modifier
+                    .padding(padding)
+                    .fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "Choose a Continent",
+                    style = MaterialTheme.typography.headlineMedium,
+                    modifier = Modifier.padding(16.dp)
+                )
+                
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(2),
+                    contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp)
+                ) {
+                    items(continents) { continent ->
+                        Button(
+                            modifier = Modifier
+                                .padding(8.dp)
+                                .height(100.dp),
+                            onClick = { onContinentSelected(continent.code) },
+                            shape = MaterialTheme.shapes.medium,
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = MaterialTheme.colorScheme.primary,
+                            ),
+                            border = ButtonDefaults.outlinedButtonBorder()
+                        ) {
+                            Text(
+                                text = continent.name,
+                                style = MaterialTheme.typography.bodyLarge,
+                                textAlign = TextAlign.Center,
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 @PreviewLightDark
