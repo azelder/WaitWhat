@@ -37,7 +37,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.azelder.waitwhat.game.GameViewModel
 import com.azelder.waitwhat.game.SnackbarState
-import com.azelder.waitwhat.game.data.QuizGameState
 import com.azelder.waitwhat.game.data.model.Continent
 import com.azelder.waitwhat.game.model.QuizQuestion
 import com.azelder.waitwhat.ui.theme.WaitWhatTheme

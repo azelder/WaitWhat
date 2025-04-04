@@ -3,9 +3,9 @@ package com.azelder.waitwhat.game
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.azelder.waitwhat.game.data.LeaderboardRepository
-import com.azelder.waitwhat.game.data.QuizGameState
 import com.azelder.waitwhat.game.data.QuizRepository
 import com.azelder.waitwhat.game.data.model.Continent
+import com.azelder.waitwhat.game.ui.QuizGameState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

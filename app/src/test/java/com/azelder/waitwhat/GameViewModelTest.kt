@@ -2,7 +2,7 @@ package com.azelder.waitwhat
 
 import com.azelder.waitwhat.game.GameViewModel
 import com.azelder.waitwhat.game.SnackbarState
-import com.azelder.waitwhat.game.data.QuizGameState
+import com.azelder.waitwhat.game.ui.QuizGameState
 import com.azelder.waitwhat.testdoubles.FakeQuizRepository
 import com.azelder.waitwhat.testdoubles.getFakeQuizQuestion
 import org.hamcrest.CoreMatchers.`is`
