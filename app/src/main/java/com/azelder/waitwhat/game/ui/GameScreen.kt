@@ -11,12 +11,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -24,10 +26,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
@@ -91,6 +97,15 @@ fun GameRoute(
             ) {
                 CircularProgressIndicator()
             }
+        }
+
+        is QuizGameState.NameForResults -> {
+            NameInputForm(
+                onNameSubmitted = { name ->
+                    viewModel.endGame() // TODO think harder about how to do this.
+                    viewModel.saveScore(name)
+                }
+            )
         }
     }
 }
@@ -330,5 +345,72 @@ fun ChooseContinent(
 @PreviewLightDark
 @Composable
 fun PreviewChooseContinent() {
+    ChooseContinent(continents = listOf(), onContinentSelected = {})
+}
 
+@Composable
+fun NameInputForm(
+    onNameSubmitted: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    var name by remember { mutableStateOf("") }
+    
+    WaitWhatTheme {
+        Scaffold { paddingValues ->
+            Column(
+                modifier = modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+                    .padding(horizontal = 16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "Congratulations!",
+                    style = MaterialTheme.typography.headlineLarge,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(top = 32.dp)
+                )
+                
+                Text(
+                    text = "Enter your name to save your score:",
+                    style = MaterialTheme.typography.bodyLarge,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(top = 8.dp, bottom = 24.dp)
+                )
+
+                OutlinedTextField(
+                    value = name,
+                    onValueChange = { name = it.trim() },
+                    label = { Text("Name") },
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Text,
+                        imeAction = ImeAction.Done
+                    ),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp)
+                )
+
+                Button(
+                    onClick = { onNameSubmitted(name) },
+                    enabled = name.isNotBlank(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(56.dp)
+                ) {
+                    Text(
+                        text = "Save Score",
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
+            }
+        }
+    }
+}
+
+@PreviewLightDark
+@Composable
+fun PreviewNameInputForm() {
+    NameInputForm(onNameSubmitted = {})
 }

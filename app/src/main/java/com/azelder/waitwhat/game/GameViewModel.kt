@@ -84,7 +84,7 @@ class GameViewModel @Inject constructor(
         _wrongGuesses.value = setOf()
         if (numQuestionsRemaining == 0) {
             quizRepository.endGame()
-            _state.value = QuizGameState.Ended
+            _state.value = QuizGameState.NameForResults
         }
         else {
             _state.value = QuizGameState.InProgress(quizRepository.getNextQuestion())
@@ -104,6 +104,10 @@ class GameViewModel @Inject constructor(
                 totalQuestions = totalQuestions,
             )
         }
+    }
+
+    fun endGame() {
+        _state.value = QuizGameState.Ended
     }
 }
 
