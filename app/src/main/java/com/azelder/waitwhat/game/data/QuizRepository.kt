@@ -30,6 +30,7 @@ interface QuizRepository {
     fun setQuestionAnswered(answer: String): Int
 }
 
+// TODO this should be moved somewhere else probably
 sealed interface QuizGameState {
     data object NotStarted : QuizGameState
     data class ChooseContinent(val continents: List<Continent>) : QuizGameState

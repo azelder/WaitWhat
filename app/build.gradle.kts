@@ -64,6 +64,11 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.apollo.runtime)
 
+    // Room
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
+    ksp(libs.room.compiler)
+
     ksp(libs.hilt.compiler)
 
     testImplementation(libs.junit)

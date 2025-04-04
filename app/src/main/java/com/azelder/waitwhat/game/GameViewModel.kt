@@ -2,6 +2,7 @@ package com.azelder.waitwhat.game
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.azelder.waitwhat.game.data.LeaderboardRepository
 import com.azelder.waitwhat.game.data.QuizGameState
 import com.azelder.waitwhat.game.data.QuizRepository
 import com.azelder.waitwhat.game.data.model.Continent
@@ -14,7 +15,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class GameViewModel @Inject constructor(
-    private val quizRepository: QuizRepository
+    private val quizRepository: QuizRepository,
+    private val leaderboardRepository: LeaderboardRepository
 ) : ViewModel() {
     // Note that these aren't state flows because they are closely ties to the continueButtonState
     // so we don't need to worry about them being out of date when recomposition triggers.
@@ -92,6 +94,17 @@ class GameViewModel @Inject constructor(
     }
 
     private fun calculateProgress(): Float = (totalQuestions.toFloat() - numQuestionsRemaining.toFloat())/totalQuestions.toFloat()
+
+    fun saveScore(name: String) {
+        viewModelScope.launch {
+            leaderboardRepository.insertScore(
+                continent = continent ?: "N/A",
+                user = name,
+                perfectGuesses = perfectAnswers,
+                totalQuestions = totalQuestions,
+            )
+        }
+    }
 }
 
 sealed interface SnackbarState {
