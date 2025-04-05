@@ -33,7 +33,8 @@ fun WwNavHost(
     ) {
         composable<Home> {
             HomeScreen(
-                onNavigateToGameScreen = { navHostController.navigate(Game) }
+                onNavigateToGameScreen = { navHostController.navigate(Game) },
+                onNavigateToLeaderboard = { navHostController.navigate(Leaderboard) }
             )
         }
         composable<Game> {

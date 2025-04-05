@@ -7,7 +7,6 @@ import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -36,7 +35,10 @@ import com.azelder.waitwhat.R
 import com.azelder.waitwhat.ui.theme.WaitWhatTheme
 
 @Composable
-fun HomeScreen(onNavigateToGameScreen: () -> Unit) {
+fun HomeScreen(
+    onNavigateToGameScreen: () -> Unit,
+    onNavigateToLeaderboard: () -> Unit
+) {
 
     val infiniteTransition = rememberInfiniteTransition(label = "world_map_animation")
     val offsetX by infiniteTransition.animateFloat(
@@ -52,28 +54,47 @@ fun HomeScreen(onNavigateToGameScreen: () -> Unit) {
     )
 
     WaitWhatTheme {
-        Scaffold (
+        Scaffold(
             bottomBar = {
                 BottomAppBar(
                     containerColor = Color.Transparent,
                     modifier = Modifier.padding(horizontal = 12.dp, vertical = 24.dp)
                 ) {
-                    Button(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(64.dp)
-                            .background(Color.Transparent),
-                        onClick = { onNavigateToGameScreen() },
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.primary
-                        ),
-                        shape = MaterialTheme.shapes.medium,
-                        border = ButtonDefaults.outlinedButtonBorder()
+                    Column(
+                        modifier = Modifier.fillMaxWidth()
                     ) {
-                        Text(text = "Lets play!")
+                        Button(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(64.dp),
+                            onClick = { onNavigateToGameScreen() },
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = MaterialTheme.colorScheme.primary
+                            ),
+                            shape = MaterialTheme.shapes.medium,
+                            border = ButtonDefaults.outlinedButtonBorder()
+                        ) {
+                            Text(text = "Let's play!")
+                        }
+
+                        Button(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(48.dp)
+                                .padding(top = 8.dp),
+                            onClick = { onNavigateToLeaderboard() },
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = MaterialTheme.colorScheme.secondary
+                            ),
+                            shape = MaterialTheme.shapes.medium,
+                            border = ButtonDefaults.outlinedButtonBorder()
+                        ) {
+                            Text(text = "View Leaderboard")
+                        }
                     }
                 }
-            }) { innerPadding ->
+            }
+        ) { innerPadding ->
             Image(
                 painter = painterResource(id = R.drawable.world_map),
                 contentDescription = null,
@@ -118,5 +139,8 @@ fun HomeScreen(onNavigateToGameScreen: () -> Unit) {
 @Composable
 @PreviewLightDark
 fun HomeScreenPreview() {
-    HomeScreen(onNavigateToGameScreen = {})
+    HomeScreen(
+        onNavigateToGameScreen = {},
+        onNavigateToLeaderboard = {}
+    )
 }
