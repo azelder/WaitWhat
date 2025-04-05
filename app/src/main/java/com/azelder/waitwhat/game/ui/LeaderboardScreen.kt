@@ -21,14 +21,14 @@ import androidx.compose.ui.unit.dp
 import com.azelder.waitwhat.ui.theme.WaitWhatTheme
 
 @Composable
-fun EndGameRoute(
+fun LeaderboardRoute(
     onNavigateToHome: () -> Unit,
 ) {
-    EndGameScreen(onNavigateToHome)
+    LeaderboardScreen(onNavigateToHome)
 }
 
 @Composable
-fun EndGameScreen(
+fun LeaderboardScreen(
     onNavigateToHome: () -> Unit
 ) {
     WaitWhatTheme {
@@ -81,5 +81,5 @@ fun EndGameScreen(
 @PreviewLightDark
 @Composable
 fun EndGameScreenPreview() {
-    EndGameScreen(onNavigateToHome = {})
+    LeaderboardScreen(onNavigateToHome = {})
 }
