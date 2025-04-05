@@ -7,12 +7,13 @@ import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -25,7 +26,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
@@ -54,82 +54,84 @@ fun HomeScreen(
     )
 
     WaitWhatTheme {
-        Scaffold(
-            bottomBar = {
-                BottomAppBar(
-                    containerColor = Color.Transparent,
-                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 24.dp)
+        Scaffold { innerPadding ->
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding)
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.world_map),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .offset(x = offsetX.dp)
+                        .scale(1.8f),
+                    contentScale = ContentScale.Crop
+                )
+                Card(
+                    modifier = Modifier
+                        .padding(horizontal = 12.dp)
+                        .fillMaxWidth(),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.background
+                    )
                 ) {
                     Column(
-                        modifier = Modifier.fillMaxWidth()
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Button(
+                        Text(
+                            text = "Welcome!",
                             modifier = Modifier
-                                .fillMaxWidth()
-                                .height(64.dp),
-                            onClick = { onNavigateToGameScreen() },
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = MaterialTheme.colorScheme.primary
-                            ),
-                            shape = MaterialTheme.shapes.medium,
-                            border = ButtonDefaults.outlinedButtonBorder()
-                        ) {
-                            Text(text = "Let's play!")
-                        }
-
-                        Button(
+                                .padding(16.dp),
+                            style = MaterialTheme.typography.headlineLarge,
+                            color = MaterialTheme.colorScheme.onBackground,
+                            textAlign = TextAlign.Center
+                        )
+                        Text(
+                            text = "Test your knowledge of the flags of the world!",
                             modifier = Modifier
-                                .fillMaxWidth()
-                                .height(48.dp)
-                                .padding(top = 8.dp),
-                            onClick = { onNavigateToLeaderboard() },
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = MaterialTheme.colorScheme.secondary
-                            ),
-                            shape = MaterialTheme.shapes.medium,
-                            border = ButtonDefaults.outlinedButtonBorder()
-                        ) {
-                            Text(text = "View Leaderboard")
-                        }
+                                .padding(16.dp),
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = MaterialTheme.colorScheme.onBackground,
+                            textAlign = TextAlign.Center
+                        )
                     }
                 }
-            }
-        ) { innerPadding ->
-            Image(
-                painter = painterResource(id = R.drawable.world_map),
-                contentDescription = null,
-                modifier = Modifier
-                    .offset(x = offsetX.dp)
-                    .scale(1.8f),
-                contentScale = ContentScale.Crop
-            )
-            Card(
-                modifier = Modifier
-                    .padding(vertical = innerPadding.calculateTopPadding(), horizontal = 12.dp)
-                    .fillMaxWidth(),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.background
-                )
-            ) {
+
                 Column(
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(horizontal = 12.dp, vertical = 24.dp)
+                        .fillMaxWidth()
                 ) {
-                    Text(
-                        text = "Welcome!",
+                    Button(
                         modifier = Modifier
-                            .padding(16.dp),
-                        style = MaterialTheme.typography.headlineLarge,
-                        color = MaterialTheme.colorScheme.onBackground,
-                        textAlign = TextAlign.Center
-                    )
-                    Text(
-                        text = "Test your knowledge of the flags of the world!",
+                            .fillMaxWidth()
+                            .height(64.dp),
+                        onClick = { onNavigateToGameScreen() },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.primary
+                        ),
+                        shape = MaterialTheme.shapes.medium,
+                        border = ButtonDefaults.outlinedButtonBorder()
+                    ) {
+                        Text(text = "Let's play!")
+                    }
+
+                    Button(
                         modifier = Modifier
-                            .padding(16.dp),
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.onBackground,
-                        textAlign = TextAlign.Center
-                    )
+                            .fillMaxWidth()
+                            .height(64.dp)
+                            .padding(top = 8.dp),
+                        onClick = { onNavigateToLeaderboard() },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.secondary
+                        ),
+                        shape = MaterialTheme.shapes.medium,
+                        border = ButtonDefaults.outlinedButtonBorder()
+                    ) {
+                        Text(text = "View Leaderboard")
+                    }
                 }
             }
         }
